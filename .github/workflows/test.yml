@@ -65,7 +65,7 @@ jobs:
         env:
           CARGO_BUILD_TARGET: ${{ steps.neon.outputs.target }}
           NEON_BUILD_PLATFORM: linux-x64-gnu
-        run: npm run debug
+        run: pnpm debug
       - name: Test
         shell: bash
         run: npm test

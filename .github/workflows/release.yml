@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       dryrun:
-        description: 'Dry run (no npm publish)'
+        description: "Dry run (no npm publish)"
         required: false
         type: boolean
         default: true
@@ -26,9 +26,9 @@ on:
           - prerelease
           - custom
       custom:
-        description: 'Custom version'
+        description: "Custom version"
         required: false
-        default: ''
+        default: ""
 
 jobs:
   setup:
@@ -131,5 +131,5 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           for p in ./dist/*.tgz ; do
-            npm publish --access public $p
+            pnpm publish --access public $p
           done

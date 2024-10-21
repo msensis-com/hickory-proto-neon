@@ -1,31 +1,31 @@
-name: 'Setup Neon'
-description: 'Setup the Neon toolchain.'
+name: "Setup Neon"
+description: "Setup the Neon toolchain."
 inputs:
   platform:
-    description: 'Platform being built for.'
+    description: "Platform being built for."
     required: false
-    default: ''
+    default: ""
   use-rust:
-    description: 'Install Rust?'
+    description: "Install Rust?"
     required: false
-    default: 'true'
+    default: "true"
   use-cross:
-    description: 'Install cross-rs?'
+    description: "Install cross-rs?"
     required: false
-    default: 'false'
+    default: "false"
   workspace:
-    description: 'Path to workspace being setup.'
+    description: "Path to workspace being setup."
     required: false
-    default: '.'
+    default: "."
 outputs:
   rust:
-    description: 'Rust version installed.'
+    description: "Rust version installed."
     value: ${{ steps.rust.outputs.version }}
   node:
-    description: 'Node version installed.'
+    description: "Node version installed."
     value: ${{ steps.node.outputs.version }}
   target:
-    description: 'Rust target architecture installed.'
+    description: "Rust target architecture installed."
     value: ${{ steps.target.outputs.target }}
 runs:
   using: "composite"
@@ -36,21 +36,29 @@ runs:
         path: ./.github/.env
         export-variables: true
         keys-case: bypass
+
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 6.32.9
+
     - name: Install Node
       uses: actions/setup-node@v3
       with:
         node-version: ${{ env.NODE_VERSION }}
         registry-url: ${{ env.NPM_REGISTRY }}
-        cache: npm
+        cache: pnpm
+
     - name: Install Dependencies
-      shell: bash  
-      run: npm ci   
+      shell: bash
+      run: pnpm install --prod
+
     - name: Compute Rust Target
       if: ${{ inputs['use-rust'] == 'true' }}
       id: target
       shell: bash
       run: echo target=$(npx neon list-platforms | jq -r '.["${{ inputs.platform }}"]') | tee -a $GITHUB_OUTPUT
       working-directory: ${{ inputs.workspace }}
+
     - name: Install Rust
       if: ${{ inputs['use-rust'] == 'true' }}
       uses: actions-rs/toolchain@v1
@@ -58,16 +66,19 @@ runs:
         toolchain: ${{ env.RUST_VERSION }}
         target: ${{ steps.target.outputs.target }}
         override: true
+
     - name: Install cross-rs
       if: ${{ inputs['use-cross'] == 'true' }}
       uses: baptiste0928/cargo-install@v2
       with:
         crate: cross
+
     - name: Node Version
       id: node
       shell: bash
       run: |
         echo version=$(node -e 'console.log(process.versions.node)') | tee -a $GITHUB_OUTPUT
+
     - name: Rust Version
       if: ${{ inputs['use-rust'] == 'true' }}
       id: rust
