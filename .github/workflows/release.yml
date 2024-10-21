@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       dryrun:
-        description: "Dry run (no pnpm publish)"
+        description: "Dry run (no npm publish)"
         required: false
         type: boolean
         default: true
@@ -131,5 +131,5 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           for p in ./dist/*.tgz ; do
-            pnpm publish --access public $p
+            npm publish --access public $p
           done
