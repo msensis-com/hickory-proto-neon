@@ -1,0 +1,3 @@
+[workspace]
+members = ["crates/hickory-proto-neon"]
+resolver = "2"
