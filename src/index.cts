@@ -1,6 +1,6 @@
 import type { Message } from "./types.js";
 
-export type * from "./types.js";
+export * from "./types.js";
 export * from "./load.cjs";
 
 declare module "@msensis/hickory-proto-neon" {
