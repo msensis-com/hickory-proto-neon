@@ -1,7 +1,9 @@
 // This module is the ESM entry point for the library.
 
 import type { Message } from "./types.js";
-export * from "./index.cjs";
+
+export type * from "./types.js";
+export * from "./load.cjs";
 
 declare module "@msensis/hickory-proto-neon" {
   export function encodePacket(message: Message): Uint8Array;
