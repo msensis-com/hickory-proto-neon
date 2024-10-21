@@ -15,9 +15,6 @@ importers:
       '@neon-rs/cli':
         specifier: ^0.1.81
         version: 0.1.81
-      '@tsconfig/node22':
-        specifier: ^22.0.0
-        version: 22.0.0
       '@types/node':
         specifier: ^22.7.7
         version: 22.7.7
@@ -84,9 +81,6 @@ packages:
   '@neon-rs/load@0.1.81':
     resolution: {integrity: sha512-A6w26BOWkFNXw04nfmcC75mLiPd3HPYC/PAuNDlXswvNb/rf55qXpTqGSz2txJmc7V8UDfIE1CAq5FUjL9wOmQ==}
 
-  '@tsconfig/node22@22.0.0':
-    resolution: {integrity: sha512-twLQ77zevtxobBOD4ToAtVmuYrpeYUh3qh+TEp+08IWhpsrIflVHqQ1F1CiPxQGL7doCdBIOOCF+1Tm833faNg==}
-
   '@types/node@22.7.7':
     resolution: {integrity: sha512-SRxCrrg9CL/y54aiMCG3edPKdprgMVGDXjA3gB8UmmBW5TcXzRUYAh8EWzTnSJFAd1rgImPELza+A3bJ+qxz8Q==}
 
@@ -144,8 +138,6 @@ snapshots:
       '@cargo-messages/win32-x64-msvc': 0.1.80
 
   '@neon-rs/load@0.1.81': {}
-
-  '@tsconfig/node22@22.0.0': {}
 
   '@types/node@22.7.7':
     dependencies:
