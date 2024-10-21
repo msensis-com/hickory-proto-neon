@@ -39,30 +39,37 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ inputs.ref }}
+
       - name: Setup Neon Environment
         uses: ./.github/actions/setup
         with:
           use-rust: false
+
       - name: Look Up Matrix Data
         id: matrixData
         shell: bash
         run: echo "json=$(npx neon show ci github | jq -rc)" | tee -a $GITHUB_OUTPUT
+
       - name: Compute Matrix
         id: matrix
         uses: actions/github-script@v7
         with:
           script: |
-            const platforms = ${{ steps.matrixData.outputs.json }};
-            const macOS = platforms.macOS.map(platform => {
-              return { os: "macos-latest", platform, script: "build" };
-            });
-            const windows = platforms.Windows.map(platform => {
-              return { os: "windows-latest", platform, script: "build" };
-            });
-            const linux = platforms.Linux.map(platform => {
+            /*
+              const platforms = ${{ steps.matrixData.outputs.json }};
+              const macOS = platforms.macOS.map(platform => {
+                return { os: "macos-latest", platform, script: "build" };
+              });
+              const windows = platforms.Windows.map(platform => {
+                return { os: "windows-latest", platform, script: "build" };
+              });
+              const linux = platforms.Linux.map(platform => {
               return { os: "ubuntu-latest", platform, script: "cross" };
-            });
-            return [...macOS, ...windows, ...linux];
+              });
+              return [...macOS, ...windows, ...linux];
+            */
+
+            return [{ os: "ubuntu-latest", platform: "linux-x64-gnu", script: "build" }]
 
   binaries:
     name: Binaries
