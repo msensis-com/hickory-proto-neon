@@ -49,7 +49,7 @@ runs:
 
     - name: Install Dependencies
       shell: bash
-      run: pnpm install --prod
+      run: pnpm install --frozen-lockfile
 
     - name: Compute Rust Target
       if: ${{ inputs['use-rust'] == 'true' }}
