@@ -1,6 +1,6 @@
 {
   "name": "@msensis/hickory-proto-neon",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "",
   "main": "./lib/index.cjs",
   "homepage": "https://github.com/msensis-com/hickory-proto-neon",
