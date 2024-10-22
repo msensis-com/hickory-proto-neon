@@ -3,6 +3,7 @@ export interface Message {
   queries: Query[];
   answers: Record[];
   additionals: Record[];
+  name_servers: Record[];
   signature: Record[];
   edns: Edns | null;
 }
