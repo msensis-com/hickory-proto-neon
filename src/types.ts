@@ -1,3 +1,5 @@
+import type { Records } from "./records";
+
 export interface Message {
   header: Header;
   queries: Query[];
@@ -36,7 +38,29 @@ export interface Record {
   rr_type: RecordType;
   dns_class: DNSClass;
   ttl: number;
-  // rdata: Option<R>,
+  rdata:
+    | { A: Records.A }
+    | { AAAA: Records.AAAA }
+    | { CAA: Records.CAA }
+    | { ANAME: Records.ANAME }
+    | { CNAME: Records.CNAME }
+    | { CSYNC: Records.CSYNC }
+    | { HINFO: Records.HINFO }
+    | { HTTPS: Records.HTTPS }
+    | { MX: Records.MX }
+    | { NAPTR: Records.NAPTR }
+    | { NULL: Records.NULL }
+    | { NS: Records.NS }
+    | { OPENPGPKEY: Records.OPENPGPKEY }
+    | { OPT: Records.OPT }
+    | { PTR: Records.PTR }
+    | { SOA: Records.SOA }
+    | { SRV: Records.SRV }
+    | { SSHFP: Records.SSHFP }
+    | { SVCB: Records.SVCB }
+    | { TLSA: Records.TLSA }
+    | { TXT: Records.TXT }
+    | { UNKNOWN: Records.UNKNOWN };
 }
 
 export type RecordType =
