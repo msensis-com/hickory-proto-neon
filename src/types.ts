@@ -34,7 +34,7 @@ export interface Query {
 }
 
 export interface Record {
-  name_labels: string;
+  name: string;
   rr_type: RecordType;
   dns_class: DNSClass;
   ttl: number;
