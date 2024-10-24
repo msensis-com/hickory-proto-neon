@@ -358,7 +358,6 @@ impl MyRData {
       RData::TXT(txt) => MyRData::TXT(txt.clone()),
       RData::Unknown { code, rdata } =>
         MyRData::Unknown { code: code.clone(), rdata: rdata.clone() },
-      RData::ZERO => MyRData::ZERO,
       _ => unreachable!(),
     }
   }
@@ -387,7 +386,6 @@ impl MyRData {
       Self::TLSA(tlsa) => RData::TLSA(tlsa.clone()),
       Self::TXT(txt) => RData::TXT(txt.clone()),
       Self::Unknown { code, rdata } => RData::Unknown { code: code.clone(), rdata: rdata.clone() },
-      Self::ZERO => RData::ZERO,
       _ => unreachable!(),
     }
   }
