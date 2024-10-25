@@ -41,6 +41,12 @@ runs:
       with:
         version: 9.7.1
 
+    - name: Install Zig
+      uses: korandoru/setup-zig@v1
+      if: ${{ inputs['use-rust'] == 'true' }}
+      with:
+        zig-version: 0.13.0
+
     - name: Install Node
       uses: actions/setup-node@v3
       with:
@@ -51,26 +57,18 @@ runs:
       shell: bash
       run: pnpm install --frozen-lockfile
 
-    - name: Compute Rust Target
-      if: ${{ inputs['use-rust'] == 'true' }}
-      id: target
-      shell: bash
-      run: echo target=$(npx neon list-platforms | jq -r '.["${{ inputs.platform }}"]') | tee -a $GITHUB_OUTPUT
-      working-directory: ${{ inputs.workspace }}
-
     - name: Install Rust
       if: ${{ inputs['use-rust'] == 'true' }}
       uses: actions-rs/toolchain@v1
       with:
         toolchain: ${{ env.RUST_VERSION }}
-        target: ${{ steps.target.outputs.target }}
+        target: x86_64-unknown-linux-gnu
         override: true
 
-    - name: Install cross-rs
-      if: ${{ inputs['use-cross'] == 'true' }}
-      uses: baptiste0928/cargo-install@v2
-      with:
-        crate: cross
+    - name: Install zigbuild
+      if: ${{ inputs['use-rust'] == 'true' }}
+      shell: bash
+      run: cargo install cargo-zigbuild
 
     - name: Node Version
       id: node
