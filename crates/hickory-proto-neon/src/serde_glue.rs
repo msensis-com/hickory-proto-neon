@@ -4,7 +4,7 @@ use hickory_proto::{
 };
 use serde::{ Deserialize, Serialize };
 
-use crate::rdata::{ MyA, MyAAAA, MyANAME, MyCNAME, MyHTTPS, MyNS, MyPTR };
+use crate::rdata::{ MyA, MyAAAA, MyANAME, MyCNAME, MyHTTPS, MyNS, MyPTR, MySVCB };
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct MyMessage {
@@ -317,7 +317,7 @@ enum MyRData {
   SOA(hickory_proto::rr::rdata::SOA),
   SRV(hickory_proto::rr::rdata::SRV),
   SSHFP(hickory_proto::rr::rdata::SSHFP),
-  SVCB(hickory_proto::rr::rdata::SVCB),
+  SVCB(crate::rdata::MySVCB),
   TLSA(hickory_proto::rr::rdata::TLSA),
   TXT(hickory_proto::rr::rdata::TXT),
 
@@ -353,7 +353,7 @@ impl MyRData {
       RData::SOA(soa) => MyRData::SOA(soa.clone()),
       RData::SRV(srv) => MyRData::SRV(srv.clone()),
       RData::SSHFP(sshfp) => MyRData::SSHFP(sshfp.clone()),
-      RData::SVCB(svcb) => MyRData::SVCB(svcb.clone()),
+      RData::SVCB(svcb) => MyRData::SVCB(MySVCB::serdeify(svcb.clone())),
       RData::TLSA(tlsa) => MyRData::TLSA(tlsa.clone()),
       RData::TXT(txt) => MyRData::TXT(txt.clone()),
       RData::Unknown { code, rdata } =>
@@ -382,7 +382,7 @@ impl MyRData {
       Self::SOA(soa) => RData::SOA(soa.clone()),
       Self::SRV(srv) => RData::SRV(srv.clone()),
       Self::SSHFP(sshfp) => RData::SSHFP(sshfp.clone()),
-      Self::SVCB(svcb) => RData::SVCB(svcb.clone()),
+      Self::SVCB(svcb) => RData::SVCB(MySVCB::into_proto(svcb.clone())),
       Self::TLSA(tlsa) => RData::TLSA(tlsa.clone()),
       Self::TXT(txt) => RData::TXT(txt.clone()),
       Self::Unknown { code, rdata } => RData::Unknown { code: code.clone(), rdata: rdata.clone() },

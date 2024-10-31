@@ -5,13 +5,13 @@
 //
 //   https://www.npmjs.com/package/@neon-rs/cli
 
-module.exports = require('@neon-rs/load').proxy({
+module.exports = require("@neon-rs/load").proxy({
   platforms: {
-    'win32-x64-msvc': () => require('@hickory-proto-neon/win32-x64-msvc'),
-    'darwin-x64': () => require('@hickory-proto-neon/darwin-x64'),
-    'darwin-arm64': () => require('@hickory-proto-neon/darwin-arm64'),
-    'linux-x64-gnu': () => require('@hickory-proto-neon/linux-x64-gnu'),
-    'linux-arm64-gnu': () => require('@hickory-proto-neon/linux-arm64-gnu')
+    "win32-x64-msvc": () => require("@hickory-proto-neon/win32-x64-msvc"),
+    "darwin-x64": () => require("@hickory-proto-neon/darwin-x64"),
+    "darwin-arm64": () => require("@hickory-proto-neon/darwin-arm64"),
+    "linux-x64-gnu": () => require("@hickory-proto-neon/linux-x64-gnu"),
+    "linux-arm64-gnu": () => require("@hickory-proto-neon/linux-arm64-gnu"),
   },
-  debug: () => require('../index.node')
+  debug: () => require("../index.node"),
 });
