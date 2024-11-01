@@ -152,7 +152,8 @@ export type RecordType =
   // Unknown(u16),
 
   /// This corresponds to a record type of 0, unspecified
-  | "ZERO";
+  | "ZERO"
+  | number;
 
 export type DNSClass =
   /// Internet

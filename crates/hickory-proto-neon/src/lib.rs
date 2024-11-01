@@ -1,6 +1,6 @@
 use neon::{ prelude::*, types::buffer::TypedArray };
 use hickory_proto::{
-  op::Message,
+  op::{ Message, MessageType },
   serialize::binary::{ BinDecodable, BinDecoder, BinEncodable, BinEncoder },
 };
 
@@ -71,7 +71,7 @@ fn decode(mut cx: FunctionContext) -> JsResult<JsValue> {
   )
 }
 
-fn create_answer(mut cx: FunctionContext) -> JsResult<JsValue> {
+fn create_response(mut cx: FunctionContext) -> JsResult<JsValue> {
   let mut packet: Message;
   let packet_obj = cx.argument_opt(0);
   if let Some(request) = packet_obj {
@@ -87,8 +87,20 @@ fn create_answer(mut cx: FunctionContext) -> JsResult<JsValue> {
     packet = Message::new();
   }
 
-  packet.set_message_type(hickory_proto::op::MessageType::Response);
   packet.truncate();
+  packet.set_truncated(false);
+  packet.set_message_type(MessageType::Response);
+
+  Ok(
+    neon_serde4
+      ::to_value(&mut cx, &packet)
+      .map_err(|x| cx.throw_error::<_, JsValue>(x.to_string()).unwrap_err())?
+  )
+}
+
+fn create_query(mut cx: FunctionContext) -> JsResult<JsValue> {
+  let mut packet = Message::new();
+  packet.set_message_type(MessageType::Query);
 
   Ok(
     neon_serde4
@@ -101,6 +113,9 @@ fn create_answer(mut cx: FunctionContext) -> JsResult<JsValue> {
 fn main(mut cx: ModuleContext) -> NeonResult<()> {
   cx.export_function("encodePacket", encode)?;
   cx.export_function("decodePacket", decode)?;
-  cx.export_function("createAnswer", create_answer)?;
+
+  cx.export_function("createResponse", create_response)?;
+  cx.export_function("createQuery", create_query)?;
+
   Ok(())
 }
