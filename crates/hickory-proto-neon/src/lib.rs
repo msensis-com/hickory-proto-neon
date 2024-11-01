@@ -1,7 +1,3 @@
-mod serde_glue;
-mod rdata;
-
-use serde_glue::MyMessage;
 use neon::{ prelude::*, types::buffer::TypedArray };
 use hickory_proto::{
   op::Message,
@@ -10,7 +6,7 @@ use hickory_proto::{
 
 fn encode(mut cx: FunctionContext) -> JsResult<JsUint8Array> {
   let packet_obj = cx.argument::<JsValue>(0)?;
-  let packet: serde_glue::MyMessage = match neon_serde4::from_value(&mut cx, packet_obj) {
+  let packet: Message = match neon_serde4::from_value(&mut cx, packet_obj) {
     Ok(value) => value,
     Err(e) => {
       return cx.throw_error(e.to_string());
@@ -27,9 +23,7 @@ fn encode(mut cx: FunctionContext) -> JsResult<JsUint8Array> {
 
   let mut buffer: Vec<u8> = vec![];
   let mut encoder = BinEncoder::new(&mut buffer);
-  MyMessage::into_proto(packet)
-    .emit(&mut encoder)
-    .map_err(|x| cx.throw_error::<_, JsValue>(x.to_string()).unwrap_err())?;
+  packet.emit(&mut encoder).map_err(|x| cx.throw_error::<_, JsValue>(x.to_string()).unwrap_err())?;
 
   if stream {
     // add size prefix
@@ -72,7 +66,7 @@ fn decode(mut cx: FunctionContext) -> JsResult<JsValue> {
 
   Ok(
     neon_serde4
-      ::to_value(&mut cx, &MyMessage::serdeify(message))
+      ::to_value(&mut cx, &message)
       .map_err(|x| cx.throw_error::<_, JsValue>(x.to_string()).unwrap_err())?
   )
 }
@@ -81,9 +75,9 @@ fn create_answer(mut cx: FunctionContext) -> JsResult<JsValue> {
   let mut packet: Message;
   let packet_obj = cx.argument_opt(0);
   if let Some(request) = packet_obj {
-    match neon_serde4::from_value::<_, MyMessage>(&mut cx, request) {
+    match neon_serde4::from_value::<_, Message>(&mut cx, request) {
       Ok(value) => {
-        packet = value.into_proto();
+        packet = value;
       }
       Err(e) => {
         return cx.throw_error(e.to_string());
@@ -96,10 +90,9 @@ fn create_answer(mut cx: FunctionContext) -> JsResult<JsValue> {
   packet.set_message_type(hickory_proto::op::MessageType::Response);
   packet.truncate();
 
-  let message = MyMessage::serdeify(packet);
   Ok(
     neon_serde4
-      ::to_value(&mut cx, &message)
+      ::to_value(&mut cx, &packet)
       .map_err(|x| cx.throw_error::<_, JsValue>(x.to_string()).unwrap_err())?
   )
 }

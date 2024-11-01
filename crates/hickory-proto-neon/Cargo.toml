@@ -14,13 +14,16 @@ crate-type = ["cdylib"]
 
 [dependencies]
 serde = { version = "1.0.210", features = ["derive"] }
-hickory-proto = { version = "0.24", default-features = false, features = [
-    "text-parsing",
-    "serde-config",
-] }
+serde_bytes = "0.11.15"
 tinyvec = { version = "*", features = ["serde"] }
 
 neon = "1"
 neon-serde4 = "1"
 neon-macros = "1"
-serde_bytes = "0.11.15"
+
+[dependencies.hickory-proto]
+git = "https://github.com/msensis-com/hickory-dns"
+package = "hickory-proto"
+branch = "hickory-proto/serde"
+default_features = false
+features = ["text-parsing", "serde"]
