@@ -21,6 +21,9 @@ export interface Header {
   authentic_data: boolean;
   checking_disabled: boolean;
   response_code: ResponseCode;
+
+  // Serde will probably complain if these are missing,
+  // but when encoding a packet we are recalculating these to ensure correctness.
   query_count: number;
   answer_count: number;
   name_server_count: number;

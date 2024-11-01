@@ -6,12 +6,18 @@ use hickory_proto::{
 
 fn encode(mut cx: FunctionContext) -> JsResult<JsUint8Array> {
   let packet_obj = cx.argument::<JsValue>(0)?;
-  let packet: Message = match neon_serde4::from_value(&mut cx, packet_obj) {
+  let mut packet: Message = match neon_serde4::from_value(&mut cx, packet_obj) {
     Ok(value) => value,
     Err(e) => {
       return cx.throw_error(e.to_string());
     }
   };
+
+  // Guarantee the header is correct.
+  packet.set_query_count(packet.queries().len() as u16);
+  packet.set_answer_count(packet.answers().len() as u16);
+  packet.set_name_server_count(packet.name_servers().len() as u16);
+  packet.set_additional_count(packet.additionals().len() as u16);
 
   let stream = match cx.argument_opt(1) {
     Some(stream) =>
