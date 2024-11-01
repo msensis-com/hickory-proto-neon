@@ -1,17 +1,22 @@
+mod serde_glue;
+
 use neon::{ prelude::*, types::buffer::TypedArray };
 use hickory_proto::{
   op::{ Message, MessageType },
   serialize::binary::{ BinDecodable, BinDecoder, BinEncodable, BinEncoder },
 };
+use serde_glue::MyMessage;
 
 fn encode(mut cx: FunctionContext) -> JsResult<JsUint8Array> {
   let packet_obj = cx.argument::<JsValue>(0)?;
-  let mut packet: Message = match neon_serde4::from_value(&mut cx, packet_obj) {
+  let packet: MyMessage = match neon_serde4::from_value(&mut cx, packet_obj) {
     Ok(value) => value,
     Err(e) => {
       return cx.throw_error(e.to_string());
     }
   };
+
+  let mut packet = MyMessage::into_proto(packet);
 
   // Guarantee the header is correct.
   packet.set_query_count(packet.queries().len() as u16);
@@ -66,13 +71,12 @@ fn decode(mut cx: FunctionContext) -> JsResult<JsValue> {
 
   let mut decoder = BinDecoder::new(buffer.as_slice());
   let Ok(message) = Message::read(&mut decoder) else {
-    cx.throw_error(&format!("Failed to decode message: {:?}", buffer))?;
-    unreachable!();
+    return cx.throw_error(&format!("Failed to decode message: {:?}", buffer));
   };
 
   Ok(
     neon_serde4
-      ::to_value(&mut cx, &message)
+      ::to_value(&mut cx, &MyMessage::serdeify(message))
       .map_err(|x| cx.throw_error::<_, JsValue>(x.to_string()).unwrap_err())?
   )
 }
@@ -81,9 +85,9 @@ fn create_response(mut cx: FunctionContext) -> JsResult<JsValue> {
   let mut packet: Message;
   let packet_obj = cx.argument_opt(0);
   if let Some(request) = packet_obj {
-    match neon_serde4::from_value::<_, Message>(&mut cx, request) {
+    match neon_serde4::from_value::<_, MyMessage>(&mut cx, request) {
       Ok(value) => {
-        packet = value;
+        packet = value.into_proto();
       }
       Err(e) => {
         return cx.throw_error(e.to_string());
@@ -99,7 +103,7 @@ fn create_response(mut cx: FunctionContext) -> JsResult<JsValue> {
 
   Ok(
     neon_serde4
-      ::to_value(&mut cx, &packet)
+      ::to_value(&mut cx, &MyMessage::serdeify(packet))
       .map_err(|x| cx.throw_error::<_, JsValue>(x.to_string()).unwrap_err())?
   )
 }
@@ -110,7 +114,7 @@ fn create_query(mut cx: FunctionContext) -> JsResult<JsValue> {
 
   Ok(
     neon_serde4
-      ::to_value(&mut cx, &packet)
+      ::to_value(&mut cx, &MyMessage::serdeify(packet))
       .map_err(|x| cx.throw_error::<_, JsValue>(x.to_string()).unwrap_err())?
   )
 }
