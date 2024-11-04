@@ -23,7 +23,7 @@ neon-macros = "1"
 
 [dependencies.hickory-proto]
 git = "https://github.com/msensis-com/hickory-dns"
-package = "hickory-proto"
+reference = "ede452a3be3392336adb4139fda5997dea686c14"
 branch = "hickory-proto/serde"
 default_features = false
 features = ["text-parsing", "serde"]
