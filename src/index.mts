@@ -3,12 +3,13 @@
 import type { Message } from "./types.js";
 
 export * from "./types.js";
-export * from "./load.cjs";
+import * as load from "./load.cjs";
 
-declare module "@msensis/hickory-proto-neon" {
-  export function encodePacket(message: Message, stream?: boolean): Uint8Array;
-  export function decodePacket(bytes: Uint8Array, stream?: boolean): Message;
+type Module = {
+  encodePacket(message: Message, stream?: boolean): Uint8Array;
+  decodePacket(bytes: Uint8Array, stream?: boolean): Message;
+  createQuery(): Message;
+  createResponse(message?: Message): Message;
+};
 
-  export function createResponse(message?: Message): Message;
-  export function createQuery(): Message;
-}
+export const { encodePacket, decodePacket, createQuery, createResponse } = load as unknown as Module;
