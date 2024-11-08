@@ -25,5 +25,5 @@ neon-macros = "1"
 git = "https://github.com/msensis-com/hickory-dns"
 reference = "ede452a3be3392336adb4139fda5997dea686c14"
 branch = "hickory-proto/serde"
-default_features = false
+default-features = false
 features = ["text-parsing", "serde"]

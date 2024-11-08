@@ -3,7 +3,7 @@
 import type { Message } from "./types.js";
 
 export * from "./types.js";
-import * as load from "./load.cjs";
+import load from "./load.cjs";
 
 type Module = {
   encodePacket(message: Message, stream?: boolean): Uint8Array;
