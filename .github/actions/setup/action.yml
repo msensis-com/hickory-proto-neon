@@ -76,7 +76,7 @@ runs:
       if: ${{ inputs['use-zigbuild'] == 'true' }}
       uses: baptiste0928/cargo-install@v2
       with:
-        crate: zigbuild
+        crate: cargo-zigbuild
 
     - name: Node Version
       id: node
