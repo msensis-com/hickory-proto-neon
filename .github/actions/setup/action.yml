@@ -1,31 +1,31 @@
-name: "Setup Neon"
-description: "Setup the Neon toolchain."
+name: 'Setup Neon'
+description: 'Setup the Neon toolchain.'
 inputs:
   platform:
-    description: "Platform being built for."
+    description: 'Platform being built for.'
     required: false
-    default: ""
+    default: ''
   use-rust:
-    description: "Install Rust?"
+    description: 'Install Rust?'
     required: false
-    default: "true"
-  use-cross:
-    description: "Install cross-rs?"
+    default: 'true'
+  use-zigbuild:
+    description: 'Install zigbuild?'
     required: false
-    default: "false"
+    default: 'false'
   workspace:
-    description: "Path to workspace being setup."
+    description: 'Path to workspace being setup.'
     required: false
-    default: "."
+    default: '.'
 outputs:
   rust:
-    description: "Rust version installed."
+    description: 'Rust version installed.'
     value: ${{ steps.rust.outputs.version }}
   node:
-    description: "Node version installed."
+    description: 'Node version installed.'
     value: ${{ steps.node.outputs.version }}
   target:
-    description: "Rust target architecture installed."
+    description: 'Rust target architecture installed.'
     value: ${{ steps.target.outputs.target }}
 runs:
   using: "composite"
@@ -36,7 +36,7 @@ runs:
         path: ./.github/.env
         export-variables: true
         keys-case: bypass
-
+    
     - uses: pnpm/action-setup@v2
       with:
         version: 9.7.1
@@ -54,21 +54,29 @@ runs:
         cache: pnpm
 
     - name: Install Dependencies
+      shell: bash  
+      run: pnpm install --frozen-lockfile   
+
+    - name: Compute Rust Target
+      if: ${{ inputs['use-rust'] == 'true' }}
+      id: target
       shell: bash
-      run: pnpm install --frozen-lockfile
+      run: echo target=$(npx neon list-platforms | jq -r '.["${{ inputs.platform }}"]') | tee -a $GITHUB_OUTPUT
+      working-directory: ${{ inputs.workspace }}
 
     - name: Install Rust
       if: ${{ inputs['use-rust'] == 'true' }}
       uses: actions-rs/toolchain@v1
       with:
         toolchain: ${{ env.RUST_VERSION }}
-        target: x86_64-unknown-linux-gnu
+        target: ${{ steps.target.outputs.target }}
         override: true
 
     - name: Install zigbuild
-      if: ${{ inputs['use-rust'] == 'true' }}
-      shell: bash
-      run: cargo install cargo-zigbuild
+      if: ${{ inputs['use-zigbuild'] == 'true' }}
+      uses: baptiste0928/cargo-install@v2
+      with:
+        crate: zigbuild
 
     - name: Node Version
       id: node

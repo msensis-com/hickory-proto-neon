@@ -7,7 +7,8 @@
 
 module.exports = require("@neon-rs/load").proxy({
   platforms: {
-    "windows-x64-gnu": () => require("@msensis/hickory-proto-neon-windows-x64-gnu"),
+    "win32-x64-msvc": () =>
+      require("@msensis/hickory-proto-neon-win32-x64-msvc"),
     "linux-x64-gnu": () => require("@msensis/hickory-proto-neon-linux-x64-gnu"),
   },
   debug: () => require("../index.node"),

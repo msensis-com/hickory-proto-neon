@@ -4,40 +4,65 @@ on:
   workflow_call:
     inputs:
       ref:
-        description: "The branch, tag, or SHA to check out"
+        description: 'The branch, tag, or SHA to check out'
         required: true
         type: string
       update-version:
-        description: "Update version before building?"
+        description: 'Update version before building?'
         required: false
         type: boolean
         default: false
       version:
-        description: "Version update (ignored if update-version is false)"
+        description: 'Version update (ignored if update-version is false)'
         required: false
         type: string
-        default: "patch"
+        default: 'patch'
       github-release:
-        description: "Publish GitHub release?"
+        description: 'Publish GitHub release?'
         required: false
         type: boolean
         default: false
       tag:
-        description: "The release tag (ignored if github-release is false)"
+        description: 'The release tag (ignored if github-release is false)'
         required: false
         type: string
-        default: ""
+        default: ''
 
 jobs:
+  matrix:
+    name: Matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.result }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup Neon Environment
+        uses: ./.github/actions/setup
+        with:
+          use-rust: false
+
+      - name: Compute Matrix
+        id: matrix
+        uses: actions/github-script@v7
+        with:
+          script: |
+            return [
+              { os: "ubuntu-latest", platform: "linux-x64-gnu", script: "zigbuild" },
+              { os: "windows-latest", platform: "win32-x64-msvc", script: "build" }
+            ];
+
   binaries:
     name: Binaries
+    needs: [matrix]
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        platform: [linux-x64-gnu]
-        script: [build]
+        cfg: ${{ fromJSON(needs.matrix.outputs.matrix) }}
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.cfg.os }}
     permissions:
       contents: write
     steps:
@@ -45,12 +70,14 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ inputs.ref }}
+
       - name: Setup Neon Environment
         id: neon
         uses: ./.github/actions/setup
         with:
-          use-cross: ${{ matrix.script == 'cross' }}
-          platform: ${{ matrix.platform }}
+          use-zigbuild: ${{ matrix.cfg.script == 'zigbuild' }}
+          platform: ${{ matrix.cfg.platform }}
+
       - name: Update Version
         if: ${{ inputs.update-version }}
         shell: bash
@@ -58,18 +85,20 @@ jobs:
           git config --global user.name $ACTIONS_USER
           git config --global user.email $ACTIONS_EMAIL
           pnpm version ${{ inputs.version }} -m "v%s"
+
       - name: Build
         shell: bash
         env:
           CARGO_BUILD_TARGET: ${{ steps.neon.outputs.target }}
-          NEON_BUILD_PLATFORM: ${{ matrix.platform }}
-        run: pnpm ${{ matrix.script }}
+          NEON_BUILD_PLATFORM: ${{ matrix.cfg.platform }}
+        run: pnpm ${{ matrix.cfg.script }}
+
       - name: Pack
         id: pack
         shell: bash
         run: |
           mkdir -p dist
-          echo filename=$(basename $(npm pack ./platforms/${{ matrix.platform }} --silent --pack-destination=./dist --json | jq -r '.[0].filename')) | tee -a $GITHUB_OUTPUT
+          echo filename=$(basename $(npm pack ./platforms/${{ matrix.cfg.platform }} --silent --pack-destination=./dist --json | jq -r '.[0].filename')) | tee -a $GITHUB_OUTPUT
       - name: Release
         if: ${{ inputs.github-release }}
         uses: softprops/action-gh-release@9d7c94cfd0a1f3ed45544c887983e9fa900f0564 # v2.0.4
@@ -79,6 +108,7 @@ jobs:
 
   main:
     name: Main
+    needs: [matrix]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code

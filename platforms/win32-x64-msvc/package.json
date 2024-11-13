@@ -1,6 +1,6 @@
 {
-  "name": "@msensis/hickory-proto-neon-windows-x64-gnu",
-  "description": "Prebuilt binary package for `hickory-proto-neon` on `windows-x64-gnu`.",
+  "name": "@msensis/hickory-proto-neon-win32-x64-msvc",
+  "description": "Prebuilt binary package for `hickory-proto-neon` on `win32-x64-msvc`.",
   "version": "0.3.4",
   "homepage": "https://github.com/msensis-com/hickory-proto-neon",
   "os": [
@@ -16,11 +16,11 @@
   "neon": {
     "org": "msensis",
     "type": "binary",
-    "rust": "x86_64-pc-windows-gnu",
-    "node": "windows-x64-gnu",
+    "rust": "x86_64-pc-windows-msvc",
+    "node": "win32-x64-msvc",
     "os": "windows",
     "arch": "x64",
-    "abi": "gnu"
+    "abi": "msvc"
   },
   "author": "Angelos Bouklis <a.bouklis@msensis.com>",
   "license": "ISC"
