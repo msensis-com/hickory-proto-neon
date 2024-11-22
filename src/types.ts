@@ -221,5 +221,53 @@ export interface Edns {
   options: globalThis.Record<EdnsCode, EdnsOption>;
 }
 
-export enum EdnsCode {}
-export type EdnsOption = {};
+export enum EdnsCode {
+  /// [RFC 6891, Reserved](https://tools.ietf.org/html/rfc6891)
+  "Zero",
+
+  /// [RFC 8764l, Apple's Long-Lived Queries, Optional](https://tools.ietf.org/html/rfc8764)
+  "LLQ",
+
+  /// [UL On-hold](https://files.dns-sd.org/draft-sekar-dns-ul.txt)
+  "UL",
+
+  /// [RFC 5001, NSID](https://tools.ietf.org/html/rfc5001)
+  "NSID",
+
+  // 4 Reserved [draft-cheshire-edns0-owner-option] -EXPIRED-
+  /// [RFC 6975, DNSSEC Algorithm Understood](https://tools.ietf.org/html/rfc6975)
+  "DAU",
+
+  /// [RFC 6975, DS Hash Understood](https://tools.ietf.org/html/rfc6975)
+  "DHU",
+
+  /// [RFC 6975, NSEC3 Hash Understood](https://tools.ietf.org/html/rfc6975)
+  "N3U",
+
+  /// [RFC 7871, Client Subnet, Optional](https://tools.ietf.org/html/rfc7871)
+  "Subnet",
+
+  /// [RFC 7314, EDNS EXPIRE, Optional](https://tools.ietf.org/html/rfc7314)
+  "Expire",
+
+  /// [RFC 7873, DNS Cookies](https://tools.ietf.org/html/rfc7873)
+  "Cookie",
+
+  /// [RFC 7828, edns-tcp-keepalive](https://tools.ietf.org/html/rfc7828)
+  "Keepalive",
+
+  /// [RFC 7830, The EDNS(0) Padding](https://tools.ietf.org/html/rfc7830)
+  "Padding",
+
+  /// [RFC 7901, CHAIN Query Requests in DNS, Optional](https://tools.ietf.org/html/rfc7901)
+  "Chain",
+}
+
+// TODO: Enable DNSSEC??
+
+export type EdnsOption =
+  | { DAU: never }
+  | { DHU: never }
+  | { N3U: never }
+  | { Subnet: globalThis.Record<string, unknown> }
+  | { Unknown: Uint8Array };
