@@ -1,6 +1,6 @@
 use hickory_proto::{
   op::{ Edns, Header, Message, MessageParts, Query },
-  rr::{ rdata::OPT, DNSClass, Name, RData, Record, RecordType },
+  rr::{ DNSClass, Name, RData, Record, RecordType },
 };
 use serde::{ Deserialize, Serialize };
 

@@ -8,5 +8,5 @@ declare module "@msensis/hickory-proto-neon" {
   export function decodePacket(bytes: Uint8Array, stream?: boolean): Message;
 
   export function createResponse(message?: Message): Message;
-  export function createQuery(): Message;
+  export function createQuery(message?: Message): Message;
 }

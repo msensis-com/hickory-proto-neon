@@ -97,9 +97,18 @@ fn create_response(mut cx: FunctionContext) -> JsResult<JsValue> {
     packet = Message::new();
   }
 
+  let edns = packet.extensions().clone();
+
   packet.truncate();
   packet.set_truncated(false);
+
   packet.set_message_type(MessageType::Response);
+  packet.set_authentic_data(false);
+  packet.set_recursion_available(false);
+
+  if edns.is_some() {
+    packet.set_edns(edns.unwrap());
+  }
 
   Ok(
     neon_serde4
@@ -110,7 +119,26 @@ fn create_response(mut cx: FunctionContext) -> JsResult<JsValue> {
 
 fn create_query(mut cx: FunctionContext) -> JsResult<JsValue> {
   let mut packet = Message::new();
+  if packet.message_type() == MessageType::Query {
+    return Ok(
+      neon_serde4
+        ::to_value(&mut cx, &MyMessage::serdeify(packet))
+        .map_err(|x| cx.throw_error::<_, JsValue>(x.to_string()).unwrap_err())?
+    );
+  }
+
+  let edns = packet.extensions().clone();
+
+  packet.truncate();
+  packet.set_truncated(false);
+
   packet.set_message_type(MessageType::Query);
+  packet.set_authentic_data(false);
+  packet.set_recursion_available(false);
+
+  if edns.is_some() {
+    packet.set_edns(edns.unwrap());
+  }
 
   Ok(
     neon_serde4
