@@ -24,6 +24,6 @@ syn = "2.0.87"
 
 [dependencies.hickory-proto]
 git = "https://github.com/msensis-com/hickory-dns"
-rev = "31f1a7ff008dc139e347376f06445d97f80ad95e"
+rev = "b9d12a73e3fd03d03c4b660aa09d78450223aca2"
 default-features = false
 features = ["text-parsing", "serde"]
