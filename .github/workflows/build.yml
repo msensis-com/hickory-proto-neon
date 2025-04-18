@@ -36,7 +36,7 @@ jobs:
       matrix: ${{ steps.matrix.outputs.result }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -67,7 +67,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -101,7 +101,7 @@ jobs:
           echo filename=$(basename $(npm pack ./platforms/${{ matrix.cfg.platform }} --silent --pack-destination=./dist --json | jq -r '.[0].filename')) | tee -a $GITHUB_OUTPUT
       - name: Release
         if: ${{ inputs.github-release }}
-        uses: softprops/action-gh-release@9d7c94cfd0a1f3ed45544c887983e9fa900f0564 # v2.0.4
+        uses: softprops/action-gh-release@c95fe1489396fe8a9eb87c0abf8aa5b2ef267fda # v2.2.1
         with:
           files: ./dist/${{ steps.pack.outputs.filename }}
           tag_name: ${{ inputs.tag }}
@@ -112,7 +112,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
       - name: Setup Neon Environment
@@ -127,7 +127,7 @@ jobs:
           echo "filename=$(npm pack --silent --pack-destination=./dist)" | tee -a $GITHUB_OUTPUT
       - name: Release
         if: ${{ inputs.github-release }}
-        uses: softprops/action-gh-release@9d7c94cfd0a1f3ed45544c887983e9fa900f0564 # v2.0.4
+        uses: softprops/action-gh-release@c95fe1489396fe8a9eb87c0abf8aa5b2ef267fda # v2.2.1
         with:
           files: ./dist/${{ steps.pack.outputs.filename }}
           tag_name: ${{ inputs.tag }}
