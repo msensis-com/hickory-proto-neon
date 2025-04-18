@@ -1,7 +1,7 @@
 {
   "name": "@msensis/hickory-proto-neon-linux-x64-gnu",
   "description": "Prebuilt binary package for `hickory-proto-neon` on `linux-x64-gnu`.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://github.com/msensis-com/hickory-proto-neon",
   "os": [
     "linux"
