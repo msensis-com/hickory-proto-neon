@@ -1,7 +1,7 @@
 {
   "name": "@msensis/hickory-proto-neon-win32-x64-msvc",
   "description": "Prebuilt binary package for `hickory-proto-neon` on `win32-x64-msvc`.",
-  "version": "0.3.6",
+  "version": "0.4.0",
   "homepage": "https://github.com/msensis-com/hickory-proto-neon",
   "os": [
     "windows"
