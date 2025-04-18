@@ -20,10 +20,12 @@ tinyvec = { version = "*", features = ["serde"] }
 neon = "1"
 neon-serde4 = "1"
 neon-macros = "1"
+syn = "2.0.87"
 
 [dependencies.hickory-proto]
-git = "https://github.com/msensis-com/hickory-dns"
-reference = "ede452a3be3392336adb4139fda5997dea686c14"
-branch = "hickory-proto/serde"
+version = "0.25.1"
+# git = "https://github.com/msensis-com/hickory-dns"
+# reference = "d55256cfadde6857be8e542ca688bc33589436a9"
+# branch = "serde-fixes"
 default-features = false
 features = ["text-parsing", "serde"]
