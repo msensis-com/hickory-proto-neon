@@ -22,7 +22,7 @@ After building hickory-proto, you can explore its exports at the Node console:
 $ pnpm i --frozen-lockfile
 $ pnpm build
 $ node
-> require('.').createAnswer()
+> require('.').createResponse()
 ```
 
 ## Available Scripts

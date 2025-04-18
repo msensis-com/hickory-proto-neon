@@ -24,6 +24,6 @@ syn = "2.0.87"
 
 [dependencies.hickory-proto]
 git = "https://github.com/msensis-com/hickory-dns"
-branch = "serde-fixes"
+rev = "1811e44844fdedc5d3e3e6b1f22b2def286382ed"
 default-features = false
 features = ["text-parsing", "serde"]

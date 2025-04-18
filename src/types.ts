@@ -42,28 +42,28 @@ export interface Record {
   dns_class: DNSClass;
   ttl: number;
   rdata:
-    | { A: Records.A }
-    | { AAAA: Records.AAAA }
-    | { CAA: Records.CAA }
-    | { ANAME: Records.ANAME }
-    | { CNAME: Records.CNAME }
-    | { CSYNC: Records.CSYNC }
-    | { HINFO: Records.HINFO }
-    | { HTTPS: Records.HTTPS }
-    | { MX: Records.MX }
-    | { NAPTR: Records.NAPTR }
-    | { NULL: Records.NULL }
-    | { NS: Records.NS }
-    | { OPENPGPKEY: Records.OPENPGPKEY }
-    | { OPT: Records.OPT }
-    | { PTR: Records.PTR }
-    | { SOA: Records.SOA }
-    | { SRV: Records.SRV }
-    | { SSHFP: Records.SSHFP }
-    | { SVCB: Records.SVCB }
-    | { TLSA: Records.TLSA }
-    | { TXT: Records.TXT }
-    | { UNKNOWN: Records.UNKNOWN };
+    | { type: "A"; content: Records.A }
+    | { type: "AAAA"; content: Records.AAAA }
+    | { type: "CAA"; content: Records.CAA }
+    | { type: "ANAME"; content: Records.ANAME }
+    | { type: "CNAME"; content: Records.CNAME }
+    | { type: "CSYNC"; content: Records.CSYNC }
+    | { type: "HINFO"; content: Records.HINFO }
+    | { type: "HTTPS"; content: Records.HTTPS }
+    | { type: "MX"; content: Records.MX }
+    | { type: "NAPTR"; content: Records.NAPTR }
+    | { type: "NULL"; content: Records.NULL }
+    | { type: "NS"; content: Records.NS }
+    | { type: "OPENPGPKEY"; content: Records.OPENPGPKEY }
+    | { type: "OPT"; content: Records.OPT }
+    | { type: "PTR"; content: Records.PTR }
+    | { type: "SOA"; content: Records.SOA }
+    | { type: "SRV"; content: Records.SRV }
+    | { type: "SSHFP"; content: Records.SSHFP }
+    | { type: "SVCB"; content: Records.SVCB }
+    | { type: "TLSA"; content: Records.TLSA }
+    | { type: "TXT"; content: Records.TXT }
+    | { type: "UNKNOWN"; content: Records.UNKNOWN };
 }
 
 export type RecordType =
